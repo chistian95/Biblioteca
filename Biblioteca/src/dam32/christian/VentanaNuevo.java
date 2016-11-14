@@ -25,11 +25,12 @@ public class VentanaNuevo extends JDialog {
 	private final JTextField tf_Titulo = new JTextField();
 	private final JLabel lblTtulo = new JLabel("T\u00EDtulo");
 	private final JButton btnAadir = new JButton("A\u00D1ADIR");
+	private JLabel lblNuevoLibro;
 
 	/**
 	 * Create the dialog.
 	 */
-	public VentanaNuevo(VentanaBiblioteca ventana) {
+	public VentanaNuevo(VentanaBiblioteca ventana, final Libro libro) {
 		this.ventanaBiblioteca = ventana;
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -37,7 +38,7 @@ public class VentanaNuevo extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JLabel lblNuevoLibro = new JLabel("NUEVO LIBRO");
+			lblNuevoLibro = new JLabel("NUEVO LIBRO");
 			lblNuevoLibro.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNuevoLibro.setFont(new Font("Tahoma", Font.BOLD, 14));
 			lblNuevoLibro.setBounds(10, 11, 414, 14);
@@ -74,17 +75,10 @@ public class VentanaNuevo extends JDialog {
 		{
 			btnAadir.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(tf_ISBN.getText().length() <= 0) {
-						JOptionPane.showMessageDialog(contentPanel, "Debes rellenar el ISBN!", "Error!", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					Libro libroNuevo = new Libro(tf_Autor.getText(), tf_Titulo.getText(), tf_ISBN.getText());
-					if(ventanaBiblioteca.getBiblioteca().añadirLibro(libroNuevo)) {
-						JOptionPane.showMessageDialog(contentPanel, "Libro añadido!");
-						ventanaBiblioteca.refrescarTabla();
-						dispose();
+					if(libro == null) {
+						crearLibro();
 					} else {
-						JOptionPane.showMessageDialog(contentPanel, "Ya existe un libro con ese ISBN", "Error!", JOptionPane.ERROR_MESSAGE);
+						modificarLibro();
 					}
 				}
 			});
@@ -92,5 +86,45 @@ public class VentanaNuevo extends JDialog {
 			contentPanel.add(btnAadir);
 		}
 		setVisible(true);
+		if(libro != null) {
+			lblNuevoLibro.setText("EDITAR LIBRO");
+			btnAadir.setText("EDITAR");
+			tf_ISBN.setText(libro.getISBN());
+			tf_ISBN.setEditable(false);
+			tf_Autor.setText(libro.getAutor());
+			tf_Titulo.setText(libro.getTitulo());
+		}
+	}
+	
+	private void crearLibro() {
+		if(tf_ISBN.getText().length() <= 0) {
+			JOptionPane.showMessageDialog(contentPanel, "Debes rellenar el ISBN!", "Error!", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		Libro libroNuevo = new Libro(tf_Autor.getText(), tf_Titulo.getText(), tf_ISBN.getText());
+		if(ventanaBiblioteca.getBiblioteca().añadirLibro(libroNuevo)) {
+			JOptionPane.showMessageDialog(contentPanel, "Libro añadido!");
+			ventanaBiblioteca.refrescarTabla();
+			dispose();
+		} else {
+			JOptionPane.showMessageDialog(contentPanel, "Ya existe un libro con ese ISBN", "Error!", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void modificarLibro() {
+		if(tf_ISBN.getText().length() <= 0) {
+			JOptionPane.showMessageDialog(contentPanel, "Debes rellenar el ISBN!", "Error!", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(JOptionPane.showConfirmDialog(contentPanel, "¿Desea editar este libro?") == 0) {
+			Libro libroMod = new Libro(tf_Autor.getText(), tf_Titulo.getText(), tf_ISBN.getText());
+			if(ventanaBiblioteca.getBiblioteca().modificaLibro(libroMod)) {
+				JOptionPane.showMessageDialog(contentPanel, "Libro editado!");
+				ventanaBiblioteca.refrescarTabla();
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(contentPanel, "Error al editar el libro!", "Error!", JOptionPane.ERROR_MESSAGE);
+			}
+		}		
 	}
 }

@@ -49,6 +49,7 @@ public class VentanaBiblioteca extends JFrame {
 	public VentanaBiblioteca() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 764, 483);
+		setUndecorated(true);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -102,11 +103,23 @@ public class VentanaBiblioteca extends JFrame {
 				ventanaNuevo();
 			}
 		});
-		btnNuevo.setBounds(10, 410, 134, 23);
+		btnNuevo.setBounds(10, 386, 134, 23);
 		contentPane.add(btnNuevo);
 		
 		JButton btnModificar = new JButton("MODIFICAR");
-		btnModificar.setBounds(604, 410, 134, 23);
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int fila = table.getSelectedRow();
+				if(fila != -1) {
+					String autor = (String) table.getValueAt(fila, 0);
+					String ISBN = (String) table.getValueAt(fila, 1);
+					String titulo = (String) table.getValueAt(fila, 2);
+					Libro libro = new Libro(autor, titulo, ISBN);
+					ventanaModificar(libro);
+				}
+			}
+		});
+		btnModificar.setBounds(594, 386, 134, 23);
 		contentPane.add(btnModificar);
 		
 		JButton btnConsultar_1 = new JButton("ELIMINAR");
@@ -128,8 +141,18 @@ public class VentanaBiblioteca extends JFrame {
 				}
 			}
 		});
-		btnConsultar_1.setBounds(310, 410, 134, 23);
+		btnConsultar_1.setBounds(300, 386, 134, 23);
 		contentPane.add(btnConsultar_1);
+		
+		JButton btnSalir = new JButton("SALIR");
+		btnSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				biblioteca.archivaLibros();
+				System.exit(0);
+			}
+		});
+		btnSalir.setBounds(299, 449, 135, 23);
+		contentPane.add(btnSalir);
 		
 		biblioteca = new Biblioteca();
 		biblioteca.recuperaLibros();
@@ -152,7 +175,11 @@ public class VentanaBiblioteca extends JFrame {
 	}
 	
 	private void ventanaNuevo() {
-		new VentanaNuevo(this);
+		new VentanaNuevo(this, null);
+	}
+	
+	private void ventanaModificar(Libro libro) {
+		new VentanaNuevo(this, libro);
 	}
 	
 	public Biblioteca getBiblioteca() {

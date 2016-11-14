@@ -39,6 +39,7 @@ public class Biblioteca {
 		}
 		return 0;
 	}
+	
 	public int recuperaLibros() {
 		estanteria.clear();
 		try {
@@ -47,8 +48,7 @@ public class Biblioteca {
 			while((libro = (Libro) ois.readObject()) != null) {
 				estanteria.add(libro);
 			}
-			ois.close();
-			return estanteria.size();
+			ois.close();			
 		} catch (FileNotFoundException e) {
 			System.out.println("No se ha encontrado el archivo!");
 		} catch (IOException e) {
@@ -56,7 +56,7 @@ public class Biblioteca {
 		} catch (ClassNotFoundException e) {
 			System.out.println("Error al leer libro: "+e.getMessage());
 		}
-		return 0;
+		return estanteria.size();
 	}
 	
 	public boolean borraLibro(String ISBN) {
