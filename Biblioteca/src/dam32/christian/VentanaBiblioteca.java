@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -108,6 +110,24 @@ public class VentanaBiblioteca extends JFrame {
 		contentPane.add(btnModificar);
 		
 		JButton btnConsultar_1 = new JButton("ELIMINAR");
+		btnConsultar_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int fila = table.getSelectedRow();
+				if(fila == -1) {
+					return;
+				}
+				if(JOptionPane.showConfirmDialog(contentPane, "¿Desea borrar este libro?") == 0) {
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					String ISBN = (String) model.getValueAt(fila, 1);
+					if(biblioteca.borraLibro(ISBN)) {
+						JOptionPane.showMessageDialog(contentPane, "Libro borrado!");
+						model.removeRow(fila);
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Error al borrar libro!", "Error!", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
 		btnConsultar_1.setBounds(310, 410, 134, 23);
 		contentPane.add(btnConsultar_1);
 		
