@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaBiblioteca extends JFrame {
 
@@ -93,6 +95,11 @@ public class VentanaBiblioteca extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JButton btnNuevo = new JButton("NUEVO");
+		btnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ventanaNuevo();
+			}
+		});
 		btnNuevo.setBounds(10, 410, 134, 23);
 		contentPane.add(btnNuevo);
 		
@@ -122,5 +129,13 @@ public class VentanaBiblioteca extends JFrame {
 			
 			model.addRow(fila);
 		}
+	}
+	
+	private void ventanaNuevo() {
+		new VentanaNuevo(this);
+	}
+	
+	public Biblioteca getBiblioteca() {
+		return biblioteca;
 	}
 }
