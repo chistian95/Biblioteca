@@ -22,8 +22,8 @@ import java.awt.event.ActionEvent;
 public class VentanaBiblioteca extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField tf_ISBN;
+	private JTextField tf_Autor;
 	private JTable table;
 	private Biblioteca biblioteca;
 
@@ -65,21 +65,26 @@ public class VentanaBiblioteca extends JFrame {
 		lblIsbn.setBounds(132, 54, 46, 14);
 		contentPane.add(lblIsbn);
 		
-		textField = new JTextField();
-		textField.setBounds(197, 51, 119, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		tf_ISBN = new JTextField();
+		tf_ISBN.setBounds(197, 51, 119, 20);
+		contentPane.add(tf_ISBN);
+		tf_ISBN.setColumns(10);
 		
 		JLabel lblAutor = new JLabel("Autor");
 		lblAutor.setBounds(413, 54, 46, 14);
 		contentPane.add(lblAutor);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(469, 51, 119, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		tf_Autor = new JTextField();
+		tf_Autor.setBounds(469, 51, 119, 20);
+		contentPane.add(tf_Autor);
+		tf_Autor.setColumns(10);
 		
 		JButton btnConsultar = new JButton("CONSULTAR");
+		btnConsultar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refrescarTabla();
+			}
+		});
 		btnConsultar.setBounds(299, 94, 148, 23);
 		contentPane.add(btnConsultar);
 		
@@ -119,7 +124,7 @@ public class VentanaBiblioteca extends JFrame {
 				}
 			}
 		});
-		btnModificar.setBounds(594, 386, 134, 23);
+		btnModificar.setBounds(604, 386, 134, 23);
 		contentPane.add(btnModificar);
 		
 		JButton btnConsultar_1 = new JButton("ELIMINAR");
@@ -164,13 +169,39 @@ public class VentanaBiblioteca extends JFrame {
 		while(model.getRowCount() > 0) {
 			model.removeRow(0);
 		}
-		for(Libro libro : biblioteca.getEstanteria()) {
-			Object[] fila = new Object[model.getColumnCount()];
-			fila[0] = libro.getAutor();
-			fila[1] = libro.getISBN();
-			fila[2] = libro.getTitulo();
-			
-			model.addRow(fila);
+		if(tf_ISBN.getText().length() <= 0 && tf_Autor.getText().length() <= 0) {
+			for(Libro libro : biblioteca.getEstanteria()) {
+				Object[] fila = new Object[model.getColumnCount()];
+				fila[0] = libro.getAutor();
+				fila[1] = libro.getISBN();
+				fila[2] = libro.getTitulo();
+				
+				model.addRow(fila);
+			}
+		} else if(tf_ISBN.getText().length() > 0) {
+			for(Libro libro : biblioteca.getEstanteria()) {
+				if(!libro.getISBN().equals(tf_ISBN.getText())) {
+					continue;
+				}
+				Object[] fila = new Object[model.getColumnCount()];
+				fila[0] = libro.getAutor();
+				fila[1] = libro.getISBN();
+				fila[2] = libro.getTitulo();
+				
+				model.addRow(fila);
+			}
+		} else if(tf_Autor.getText().length() > 0) {
+			for(Libro libro : biblioteca.getEstanteria()) {
+				if(!libro.getAutor().equals(tf_Autor.getText())) {
+					continue;
+				}
+				Object[] fila = new Object[model.getColumnCount()];
+				fila[0] = libro.getAutor();
+				fila[1] = libro.getISBN();
+				fila[2] = libro.getTitulo();
+				
+				model.addRow(fila);
+			}
 		}
 	}
 	
