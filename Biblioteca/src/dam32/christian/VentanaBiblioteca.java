@@ -1,23 +1,22 @@
 package dam32.christian;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaBiblioteca extends JFrame {
 
@@ -115,13 +114,15 @@ public class VentanaBiblioteca extends JFrame {
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int fila = table.getSelectedRow();
-				if(fila != -1) {
-					String autor = (String) table.getValueAt(fila, 0);
-					String ISBN = (String) table.getValueAt(fila, 1);
-					String titulo = (String) table.getValueAt(fila, 2);
-					Libro libro = new Libro(autor, titulo, ISBN);
-					ventanaModificar(libro);
+				if(fila == -1) {
+					JOptionPane.showMessageDialog(contentPane, "No has seleccionado ninguna fila!", "Error!", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
+				String autor = (String) table.getValueAt(fila, 0);
+				String ISBN = (String) table.getValueAt(fila, 1);
+				String titulo = (String) table.getValueAt(fila, 2);
+				Libro libro = new Libro(autor, titulo, ISBN);
+				ventanaModificar(libro);
 			}
 		});
 		btnModificar.setBounds(604, 386, 134, 23);
@@ -132,6 +133,7 @@ public class VentanaBiblioteca extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				int fila = table.getSelectedRow();
 				if(fila == -1) {
+					JOptionPane.showMessageDialog(contentPane, "No has seleccionado ninguna fila!", "Error!", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				if(JOptionPane.showConfirmDialog(contentPane, "¿Desea borrar este libro?") == 0) {
@@ -179,10 +181,8 @@ public class VentanaBiblioteca extends JFrame {
 				model.addRow(fila);
 			}
 		} else if(tf_ISBN.getText().length() > 0) {
-			for(Libro libro : biblioteca.getEstanteria()) {
-				if(!libro.getISBN().equals(tf_ISBN.getText())) {
-					continue;
-				}
+			Libro libro = biblioteca.buscaLibroISBN(tf_ISBN.getText().toUpperCase());
+			if(libro != null) {
 				Object[] fila = new Object[model.getColumnCount()];
 				fila[0] = libro.getAutor();
 				fila[1] = libro.getISBN();
@@ -191,10 +191,8 @@ public class VentanaBiblioteca extends JFrame {
 				model.addRow(fila);
 			}
 		} else if(tf_Autor.getText().length() > 0) {
-			for(Libro libro : biblioteca.getEstanteria()) {
-				if(!libro.getAutor().equals(tf_Autor.getText())) {
-					continue;
-				}
+			List<Libro> libros = biblioteca.buscaLibroAutor(tf_Autor.getText().toUpperCase());
+			for(Libro libro : libros) {
 				Object[] fila = new Object[model.getColumnCount()];
 				fila[0] = libro.getAutor();
 				fila[1] = libro.getISBN();
@@ -203,6 +201,8 @@ public class VentanaBiblioteca extends JFrame {
 				model.addRow(fila);
 			}
 		}
+		tf_ISBN.setText("");
+		tf_Autor.setText("");
 	}
 	
 	private void ventanaNuevo() {
