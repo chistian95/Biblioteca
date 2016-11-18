@@ -19,7 +19,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class VentanaBiblioteca extends JFrame {
-
+	private static final long serialVersionUID = 8046773707753642956L;
+	
 	private JPanel contentPane;
 	private JTextField tf_ISBN;
 	private JTextField tf_Autor;
@@ -125,7 +126,7 @@ public class VentanaBiblioteca extends JFrame {
 				ventanaModificar(libro);
 			}
 		});
-		btnModificar.setBounds(604, 386, 134, 23);
+		btnModificar.setBounds(299, 386, 134, 23);
 		contentPane.add(btnModificar);
 		
 		JButton btnConsultar_1 = new JButton("ELIMINAR");
@@ -148,7 +149,7 @@ public class VentanaBiblioteca extends JFrame {
 				}
 			}
 		});
-		btnConsultar_1.setBounds(300, 386, 134, 23);
+		btnConsultar_1.setBounds(154, 386, 134, 23);
 		contentPane.add(btnConsultar_1);
 		
 		JButton btnSalir = new JButton("SALIR");
@@ -160,6 +161,15 @@ public class VentanaBiblioteca extends JFrame {
 		});
 		btnSalir.setBounds(299, 449, 135, 23);
 		contentPane.add(btnSalir);
+		
+		JButton btnPrestamos = new JButton("PRESTAMOS");
+		btnPrestamos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ventanaPrestamos();
+			}
+		});
+		btnPrestamos.setBounds(604, 386, 134, 23);
+		contentPane.add(btnPrestamos);
 		
 		biblioteca = new Biblioteca();
 		biblioteca.recuperaLibros();
@@ -211,6 +221,11 @@ public class VentanaBiblioteca extends JFrame {
 	
 	private void ventanaModificar(Libro libro) {
 		new VentanaNuevo(this, libro);
+	}
+	
+	private void ventanaPrestamos() {
+		this.setVisible(false);
+		new VentanaPrestamos(this);
 	}
 	
 	public Biblioteca getBiblioteca() {

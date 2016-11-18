@@ -15,7 +15,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 public class VentanaNuevo extends JDialog {
-
+	private static final long serialVersionUID = -7564517784502990344L;
+	
 	private final JPanel contentPanel = new JPanel();
 	private VentanaBiblioteca ventanaBiblioteca;
 	private JTextField tf_ISBN;
