@@ -119,6 +119,11 @@ public class VentanaPrestamos extends JDialog {
 					return;
 				}
 				
+				if(libro.getFechaDevolucion() != null) {
+					JOptionPane.showMessageDialog(contentPanel, "Este libro ya ha sido devuelto!", "Error!", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				while(true) {
 					String fechaString = JOptionPane.showInputDialog("Introduce la fecha de devolucion");
 					if(Fecha.comprobar(fechaString)) {
